@@ -1,6 +1,5 @@
 import { validate } from ".";
-import { isProject } from "../types/project";
-import { isTask } from "../types/task";
+import { isProject, isProjectTask } from "../types/project";
 
 export const validateCreateProject = validate({
   project: {
@@ -13,7 +12,7 @@ export const validateCreateProject = validate({
     in: ["body"],
     isArray: true,
     custom: {
-      options: (value: unknown[]) => value.every(isTask),
+      options: (value: unknown[]) => value.every(isProjectTask),
     },
   },
 });
