@@ -1,23 +1,49 @@
 import { Router } from "express";
+import {
+  createNewTasks,
+  deleteTasksById,
+  updateTaskById,
+} from "../services/task";
 import { validateDelete } from "../validators/common";
+import { validateUpdateProject } from "../validators/project";
 import { validateCreateTask } from "../validators/task";
 
 const taskRouter = Router();
 
-taskRouter.get("/", (req, res) => {
-  res.send("Hello from task route");
+taskRouter.get("/:page", (req, res, next) => {
+  try {
+    res.send("Hello from task route");
+  } catch (error) {
+    next(error);
+  }
 });
 
-taskRouter.post("/", validateCreateTask, async (req, res) => {
-  const { tasks } = req.body;
+taskRouter.post("/", validateCreateTask, async (req, res, next) => {
+  try {
+    const { tasks } = req.body;
+    res.send(await createNewTasks(tasks));
+  } catch (error) {
+    next(error);
+  }
 });
 
-taskRouter.delete("/", validateDelete, async (req, res) => {
-  const { ids } = req.body;
+taskRouter.delete("/", validateDelete, async (req, res, next) => {
+  try {
+    const { ids } = req.body;
+    res.send(await deleteTasksById(ids));
+  } catch (error) {
+    next(error);
+  }
 });
 
-taskRouter.patch("/:id", async (req, res) => {
-  const { id } = req.params;
+taskRouter.patch("/:id", validateUpdateProject, async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { data } = req.body;
+    res.send(await updateTaskById(+id, data));
+  } catch (error) {
+    next(error);
+  }
 });
 
 export default taskRouter;

@@ -6,4 +6,5 @@ config();
 export const configs = {
   port: env.get("PORT").default("8000").asPortNumber(),
   clientURL: env.get("CLIENT_URL").required().asString(),
+  windowSize: env.get("WINDOW_SIZE").default("10").asIntPositive(),
 };

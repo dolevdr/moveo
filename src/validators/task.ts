@@ -10,3 +10,16 @@ export const validateCreateTask = validate({
     },
   },
 });
+
+export const validateUpdateTask = validate({
+  data: {
+    in: ["body"],
+    custom: {
+      options: (value: unknown) =>
+        typeof value !== "object" ||
+        (!("title" in value) &&
+          !("description" in value) &&
+          !("status" in value)),
+    },
+  },
+});

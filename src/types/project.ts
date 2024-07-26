@@ -1,4 +1,4 @@
-import { Project } from "@prisma/client";
+import { Project, Task } from "@prisma/client";
 
 export function isProject(value: unknown): value is Project {
   return (
@@ -10,3 +10,5 @@ export function isProject(value: unknown): value is Project {
     typeof value.description === "string"
   );
 }
+
+export type ProjectData = Project & { tasks: Task[] };

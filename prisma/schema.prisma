@@ -26,7 +26,7 @@ model Task {
   description String
   status      Status
   project_id  Int
-  project     Project @relation(fields: [project_id], references: [id])
+  project     Project @relation(fields: [project_id], references: [id], onDelete: Cascade)
 }
 
 enum Status {
