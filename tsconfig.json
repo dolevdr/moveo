@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+      "incremental": true,
+      "target": "esnext",
+      "module": "commonjs",
+      "declaration": true,
+      "strict": false,
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "rootDir": "./src",
+      "outDir": "./build"
+    },
+}
