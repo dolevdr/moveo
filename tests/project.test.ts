@@ -47,19 +47,4 @@ describe("Project Routes", () => {
     expect(response.status).toBe(200);
     expect(response.data.count >= 0).toBeTruthy();
   });
-
-  //   test("PATCH /projects/:id", async () => {
-  //     const mockUpdatedProject = { id: 1, name: "Updated Project" };
-  //     (updateProjectById as jest.Mock).mockResolvedValue(mockUpdatedProject);
-
-  //     const response = await request(app)
-  //       .patch("/projects/1")
-  //       .send({ name: "Updated Project" });
-
-  //     expect(response.status).toBe(200);
-  //     expect(response.body).toEqual(mockUpdatedProject);
-  //     expect(updateProjectById).toHaveBeenCalledWith(1, {
-  //       name: "Updated Project",
-  //     });
-  //   });
 });
