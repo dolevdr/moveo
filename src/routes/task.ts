@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   createNewTasks,
   deleteTasksById,
+  getTasksByPage,
   updateTaskById,
 } from "../services/task";
 import { validateDelete } from "../validators/common";
@@ -10,9 +11,9 @@ import { validateCreateTask } from "../validators/task";
 
 const taskRouter = Router();
 
-taskRouter.get("/:page", (req, res, next) => {
+taskRouter.get("/:page", async (req, res, next) => {
   try {
-    res.send("Hello from task route");
+    res.send(await getTasksByPage(+req.params.page));
   } catch (error) {
     next(error);
   }

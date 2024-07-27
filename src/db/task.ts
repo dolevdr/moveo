@@ -1,12 +1,14 @@
 import { Prisma, Task } from "@prisma/client";
 import { executeQuery, prismaDb } from ".";
 import { logger } from "../logger";
+import { configs } from "../utils/config";
 
+const { taskWindow } = configs;
 export async function getTasks(page: number): Promise<Task[]> {
   logger.debug(`Getting tasks page - ${page}`);
   const query = prismaDb.task.findMany({
-    skip: page * 10,
-    take: 10,
+    skip: page * taskWindow,
+    take: taskWindow,
   });
   return executeQuery(query, "Error getting tasks");
 }

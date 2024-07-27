@@ -7,12 +7,12 @@ describe("Project Routes", () => {
   });
 
   test("GET /projects/:page", async () => {
-    const { windowSize } = configs;
+    const { projectWindow } = configs;
 
     const response = await axios.get(`${configs.api}/project/0`);
 
     expect(response.status).toBe(200);
-    expect(response.data.length <= windowSize).toBeTruthy();
+    expect(response.data.length).toBeLessThanOrEqual(projectWindow);
   });
 
   test("POST /projects", async () => {
@@ -38,7 +38,8 @@ describe("Project Routes", () => {
   });
 
   test("DELETE /projects", async () => {
-    const ids = [1, 2, 3];
+    // save project id 15 for task creation
+    const ids = Array.from({ length: 10 }, (_, i) => i + 16);
 
     const response = await axios.delete(`${configs.api}/project`, {
       data: { ids },

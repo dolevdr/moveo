@@ -4,13 +4,13 @@ import { logger } from "../logger";
 import { ProjectData } from "../types/project";
 import { configs } from "../utils/config";
 
-const { windowSize } = configs;
+const { projectWindow } = configs;
 
 export async function getProjects(page: number): Promise<ProjectData[]> {
   logger.debug(`Getting projects page - ${page}`);
   const query = prismaDb.project.findMany({
-    skip: page * windowSize,
-    take: windowSize,
+    skip: page * projectWindow,
+    take: projectWindow,
     include: { tasks: true },
   });
   return executeQuery(query, "Error getting projects");
