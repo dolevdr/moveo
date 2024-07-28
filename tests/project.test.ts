@@ -15,6 +15,7 @@ describe("Project Routes", () => {
   beforeAll(async () => {
     user = await getUserRoleById(id);
   });
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -40,19 +41,6 @@ describe("Project Routes", () => {
         status: "to_do",
       },
     ];
-
-    // const response = await axios.post(
-    //   `${configs.api}/project`,
-    //   {
-    //     project,
-    //     tasks,
-    //   },
-    //   {
-    //     headers: {
-    //       Authorization: tokenRes,
-    //     },
-    //   }
-    // );
     const response = await createNewProject(project, tasks);
 
     expect(response[0].name).toBe(project.name);
@@ -63,12 +51,6 @@ describe("Project Routes", () => {
     // save project id 15 for task creation
     const ids = Array.from({ length: 10 }, (_, i) => i + 16);
 
-    // const response = await axios.delete(`${configs.api}/project`, {
-    //   data: { ids },
-    //   headers: {
-    //     Authorization: tokenRes,
-    //   },
-    // });
     const response = await deleteProjectsById(ids);
 
     expect(response.count >= 0).toBeTruthy();
