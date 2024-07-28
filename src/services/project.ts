@@ -1,4 +1,4 @@
-import { Prisma, Project } from "@prisma/client";
+import { Prisma, Project, Role } from "@prisma/client";
 import {
   areAllIdsExist,
   createProjects,
@@ -11,8 +11,11 @@ import { createTasks } from "../db/task";
 import { NotFoundError } from "../types/error";
 import { ProjectData } from "../types/project";
 
-export async function getProjectsByPage(page: number): Promise<ProjectData[]> {
-  return getProjects(page);
+export async function getProjectsByPage(
+  page: number,
+  role: Role
+): Promise<ProjectData[]> {
+  return getProjects(page, role);
 }
 
 export async function getProjectsById(ids: number[]): Promise<ProjectData[]> {
@@ -20,8 +23,8 @@ export async function getProjectsById(ids: number[]): Promise<ProjectData[]> {
 }
 
 export async function createNewProject(
-  project: Prisma.ProjectCreateInput,
-  tasks: Prisma.TaskCreateInput[]
+  project: Prisma.ProjectCreateManyInput,
+  tasks: Prisma.TaskCreateManyProjectInput[]
 ): Promise<ProjectData[]> {
   const [newProject] = await createProjects([project]);
   const newTasks = await createTasks(

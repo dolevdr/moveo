@@ -13,3 +13,11 @@ export class NotFoundError extends Error {
     Object.setPrototypeOf(this, NotFoundError.prototype);
   }
 }
+
+export class UnauthorizedError extends Error {
+  status = 401;
+  constructor(message: string) {
+    super(message);
+    Object.setPrototypeOf(this, UnauthorizedError.prototype);
+  }
+}

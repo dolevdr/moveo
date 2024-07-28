@@ -1,7 +1,20 @@
+import { afterEach, beforeAll, describe, expect, jest } from "@jest/globals";
 import { Prisma } from "@prisma/client";
-import axios from "axios";
+import {
+  createNewProject,
+  deleteProjectsById,
+  getProjectsByPage,
+} from "../src/services/project";
+import { getUserRoleById } from "../src/services/user";
 import { configs } from "../src/utils/config";
+
+let user: any;
+const id = "111111111";
+
 describe("Project Routes", () => {
+  beforeAll(async () => {
+    user = await getUserRoleById(id);
+  });
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -9,16 +22,16 @@ describe("Project Routes", () => {
   test("GET /projects/:page", async () => {
     const { projectWindow } = configs;
 
-    const response = await axios.get(`${configs.api}/project/0`);
+    const response = await getProjectsByPage(0, user.role);
 
-    expect(response.status).toBe(200);
-    expect(response.data.length).toBeLessThanOrEqual(projectWindow);
+    expect(response.length).toBeLessThanOrEqual(projectWindow);
   });
 
   test("POST /projects", async () => {
-    const project: Prisma.ProjectCreateInput = {
+    const project: Prisma.ProjectCreateManyInput = {
       name: "New Project",
       description: "New Description",
+      owner_id: "111111111",
     };
     const tasks: Prisma.TaskCreateManyProjectInput[] = [
       {
@@ -27,25 +40,37 @@ describe("Project Routes", () => {
         status: "to_do",
       },
     ];
-    const response = await axios.post(`${configs.api}/project`, {
-      project,
-      tasks,
-    });
 
-    expect(response.status).toBe(200);
-    expect(response.data[0].name).toEqual(project.name);
-    expect(response.data[0].description).toEqual(project.description);
+    // const response = await axios.post(
+    //   `${configs.api}/project`,
+    //   {
+    //     project,
+    //     tasks,
+    //   },
+    //   {
+    //     headers: {
+    //       Authorization: tokenRes,
+    //     },
+    //   }
+    // );
+    const response = await createNewProject(project, tasks);
+
+    expect(response[0].name).toBe(project.name);
+    expect(response[0].description).toBe(project.description);
   });
 
   test("DELETE /projects", async () => {
     // save project id 15 for task creation
     const ids = Array.from({ length: 10 }, (_, i) => i + 16);
 
-    const response = await axios.delete(`${configs.api}/project`, {
-      data: { ids },
-    });
+    // const response = await axios.delete(`${configs.api}/project`, {
+    //   data: { ids },
+    //   headers: {
+    //     Authorization: tokenRes,
+    //   },
+    // });
+    const response = await deleteProjectsById(ids);
 
-    expect(response.status).toBe(200);
-    expect(response.data.count >= 0).toBeTruthy();
+    expect(response.count >= 0).toBeTruthy();
   });
 });

@@ -1,8 +1,18 @@
 import { Prisma } from "@prisma/client";
-import axios from "axios";
+import {
+  createNewTasks,
+  deleteTasksById,
+  getTasksByPage,
+} from "../src/services/task";
+import { getUserRoleById } from "../src/services/user";
 import { configs } from "../src/utils/config";
 
+let user: any;
+const id = "111111111";
 describe("Task Routes", () => {
+  beforeAll(async () => {
+    user = await getUserRoleById(id);
+  });
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -10,10 +20,9 @@ describe("Task Routes", () => {
   test("GET /task/:page", async () => {
     const { taskWindow } = configs;
 
-    const response = await axios.get(`${configs.api}/task/0`);
+    const response = await getTasksByPage(0);
 
-    expect(response.status).toBe(200);
-    expect(response.data.length).toBeLessThanOrEqual(taskWindow);
+    expect(response.length).toBeLessThanOrEqual(taskWindow);
   });
 
   test("POST /task", async () => {
@@ -25,25 +34,19 @@ describe("Task Routes", () => {
       project_id: 15,
     };
 
-    const response = await axios.post(`${configs.api}/task`, {
-      tasks: [newTask],
-    });
+    const response = await createNewTasks([newTask]);
 
-    expect(response.status).toBe(200);
-    expect(response.data[0].title).toEqual(newTask.title);
-    expect(response.data[0].description).toEqual(newTask.description);
-    expect(response.data[0].status).toEqual(newTask.status);
-    expect(response.data[0].project_id).toEqual(newTask.project_id);
+    expect(response[0].title).toBe(newTask.title);
+    expect(response[0].description).toBe(newTask.description);
+    expect(response[0].status).toBe(newTask.status);
+    expect(response[0].project_id).toBe(newTask.project_id);
   });
 
   test("DELETE /tasks", async () => {
     const ids = Array.from({ length: 15 }, (_, i) => i + 15);
 
-    const response = await axios.delete(`${configs.api}/task`, {
-      data: { ids },
-    });
+    const response = await deleteTasksById(ids);
 
-    expect(response.status).toBe(200);
-    expect(response.data.count).toBeGreaterThanOrEqual(0);
+    expect(response.count).toBeGreaterThanOrEqual(0);
   });
 });

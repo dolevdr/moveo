@@ -8,4 +8,5 @@ export const configs = {
   api: env.get("API").required().asString(),
   taskWindow: env.get("TASK_WINDOW_SIZE").default("10").asIntPositive(),
   projectWindow: env.get("PROJECT_WINDOW_SIZE").default("10").asIntPositive(),
+  jwtKey: env.get("KEY").required().asString(),
 };

@@ -1,4 +1,4 @@
-import { Project, Task } from "@prisma/client";
+import { Project, Role, Task } from "@prisma/client";
 
 export function isProject(value: unknown): value is Project {
   return (
@@ -7,7 +7,10 @@ export function isProject(value: unknown): value is Project {
     "name" in value &&
     typeof value.name === "string" &&
     "description" in value &&
-    typeof value.description === "string"
+    typeof value.description === "string" &&
+    "owner_id" in value &&
+    typeof value.owner_id === "string" &&
+    !!Role[value.owner_id]
   );
 }
 

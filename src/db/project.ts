@@ -1,4 +1,4 @@
-import { Prisma, Project } from "@prisma/client";
+import { Prisma, Project, Role } from "@prisma/client";
 import { executeQuery, prismaDb } from ".";
 import { logger } from "../logger";
 import { ProjectData } from "../types/project";
@@ -6,18 +6,22 @@ import { configs } from "../utils/config";
 
 const { projectWindow } = configs;
 
-export async function getProjects(page: number): Promise<ProjectData[]> {
+export async function getProjects(
+  page: number,
+  role: Role
+): Promise<ProjectData[]> {
   logger.debug(`Getting projects page - ${page}`);
   const query = prismaDb.project.findMany({
     skip: page * projectWindow,
     take: projectWindow,
     include: { tasks: true },
+    where: role === Role.admin ? {} : { owner_id: role },
   });
   return executeQuery(query, "Error getting projects");
 }
 
 export async function createProjects(
-  data: Prisma.ProjectCreateInput[]
+  data: Prisma.ProjectCreateManyInput[]
 ): Promise<Project[]> {
   logger.debug(`Creating projects: ${JSON.stringify(data)}`);
   const query = prismaDb.project.createManyAndReturn({ data });
